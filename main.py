@@ -17,13 +17,12 @@ BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 
-
 # Setup the screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Monopoly Game Board with Background")
 
 # Load background image
-background_path = "C:\\User\\Download\\background.jpg"  # Replace with your image path
+background_path = "background.jpg"  # Replace with your image path
 background_image = pygame.image.load(background_path)
 background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))  # Scale to fit screen
 
