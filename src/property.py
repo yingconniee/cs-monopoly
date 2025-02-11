@@ -13,32 +13,47 @@ class Property:
         """Allows a player to buy the property if it's unowned"""
         if self.owner is None:  # If not owned, allow purchase
             self.owner = player.name
-            self.level = 1
+            self.level = 1  # Start with Level 1 house
 
     def upgrade(self, player, screen):
         """Ask the player if they want to upgrade (max level 3)"""
         if self.owner == player.name and self.level < 3:
             if player.is_human:
-                self.show_upgrade_popup(screen, player)
+                self.show_upgrade_popup(screen, player)  # Show popup for humans
             else:
-                self.level += 1
+                self.level += 1  # Auto-upgrade for bots
 
-    def interact(self, player, screen, game_map):
+    def interact(self, player, screen, game_map, game):
         """Handles interaction when a player lands on a property"""
         pos = tuple(player.pos)
 
-        if pos in game_map.property_positions:  # 🔥 Only allow buying/upgrading on valid property positions
+        if pos in game_map.property_positions:
+            property_name = game_map.property_names.get(pos, "Unknown")  # Get property name
+
             if self.owner is None:  
                 if player.is_human:
-                    self.show_buy_popup(screen, player)
+                    self.show_buy_popup(screen, player, property_name)  # Human players get a buy option
                 else:    
-                    self.buy(player)
-            elif self.owner == player.name and self.level < 3:  
-                self.upgrade(player, screen)
+                    self.buy(player)  # Bots buy instantly
+            elif self.owner != player.name:  # If player steps on someone else's property, pay rent
+                rent_amount = self.calculate_rent()
+                player.money -= rent_amount
+                owner = game.get_player_by_name(self.owner)
+                if owner:
+                    owner.money += rent_amount  # Transfer rent to property owner
 
-    def show_buy_popup(self, screen, player):
+                # Check if player is bankrupt
+                if player.money <= 0:
+                    game.remove_player(player, screen)
+
+    def calculate_rent(self):
+        """Returns rent based on property level"""
+        rent_prices = {1: 1000, 2: 2000, 3: 3000}
+        return rent_prices.get(self.level, 0)
+
+    def show_buy_popup(self, screen, player, property_name):
         """Display a popup asking the player if they want to buy the property"""
-        self.show_popup(screen, f"{player.name}, Buy this property?", "Y/N", lambda: self.buy(player))
+        self.show_popup(screen, f"{player.name}, Buy this property ({property_name})?", "Y/N", lambda: self.buy(player))
 
     def show_upgrade_popup(self, screen, player):
         """Display a popup asking the player if they want to upgrade"""
@@ -98,4 +113,4 @@ class Property:
     def level_up(self):
         """Increase property level"""
         if self.level < 3:
-            self.level += 1
+            self.level += 1  # Upgrade up to Level 3

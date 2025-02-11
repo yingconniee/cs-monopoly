@@ -6,7 +6,7 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 # Initialize screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-background_image = pygame.image.load("assets/background.jpg")
+background_image = pygame.image.load("assets/background.tiff")
 background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # Load images
