@@ -7,14 +7,14 @@ class Map:
     def __init__(self):
         """Initialize map with randomly assigned property positions"""
         self.property_positions = set(random.sample(MOVEMENT_PATH, 20))
-        self.properties = {}
+        self.properties = {pos: Property(pos) for pos in self.property_positions}
 
         # Assign unique property names
         self.property_names = {pos: f"MCS{index:03d}" for index, pos in enumerate(self.property_positions, start=1)}
 
         # Scale houses
         self.house_images = {
-            1: pygame.transform.scale(pygame.image.load("assets/level1.png"), (TILE_SIZE + 50, TILE_SIZE + 50)),  
+            1: pygame.transform.scale(pygame.image.load("assets/level1_2.png"), (TILE_SIZE + 50, TILE_SIZE + 50)),  
             2: pygame.transform.scale(pygame.image.load("assets/level2.png"), (TILE_SIZE + 50, TILE_SIZE + 50)),  
             3: pygame.transform.scale(pygame.image.load("assets/level3.png"), (TILE_SIZE + 50, TILE_SIZE + 50)),  
         }
@@ -25,8 +25,11 @@ class Map:
             for col in range(BOARD_SIZE):
                 x, y = col * TILE_SIZE, row * TILE_SIZE
 
-                if (row, col) in self.property_positions:
-                    pygame.draw.rect(screen, PROPERTY_BORDER, (x, y, TILE_SIZE, TILE_SIZE), 6)
+                if row == 0 or row == BOARD_SIZE - 1 or col == 0 or col == BOARD_SIZE - 1:
+                    if (row, col) in self.property_positions:
+                        pygame.draw.rect(screen, PROPERTY_BORDER, (x, y, TILE_SIZE, TILE_SIZE), 6)
+                    else:
+                        pygame.draw.rect(screen, BLUE, (x, y, TILE_SIZE, TILE_SIZE), 6)
 
         # Draw owned properties
         for pos, property_obj in self.properties.items():

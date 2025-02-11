@@ -30,6 +30,12 @@ players = [
 game = Game(screen, players, background_image)
 pygame.font.init()
 
+screen.blit(background_image, (0, 0))
+game.map.draw(screen)
+for player in players:
+    player.draw(screen)
+pygame.display.flip()
+
 # Main loop
 running = True
 while running:

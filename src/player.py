@@ -49,3 +49,7 @@ class Player:
 
                 pygame.display.flip()
                 pygame.time.delay(300)  # Small delay for smooth animation
+        
+        property = game.map.properties.get(tuple(self.pos))
+        if property:
+            property.interact(self, screen, game.map, game)
