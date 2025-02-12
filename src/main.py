@@ -39,11 +39,21 @@ pygame.display.flip()
 # Main loop
 running = True
 while running:
-    game.map.draw(screen)  
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False  
+
+    screen.blit(background_image, (0, 0))  # Redraw background
+    game.map.draw(screen)  # Redraw board
     for player in players:
-        player.draw(screen)
+        player.draw(screen)  # Draw all players
+
+    game.display_money()  # Show player money in boxes
 
     pygame.display.flip()
     running = game.next_turn()
 
 pygame.quit()
+
+
+

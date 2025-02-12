@@ -18,6 +18,9 @@ class Property:
             self.just_bought = True  # Set the just_bought flag
             print('Property bought!')
 
+
+
+
     def upgrade(self, player, screen, game):
         """Ask the player if they want to upgrade (max level 3)"""
         if self.owner == player.name and self.level < 3:

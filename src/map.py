@@ -1,6 +1,6 @@
 import pygame
 import random
-from settings import BOARD_SIZE, TILE_SIZE, BLUE, PLAYER_COLORS, MOVEMENT_PATH, SCREEN_HEIGHT, SCREEN_WIDTH, PROPERTY_BORDER
+from settings import BOARD_SIZE, TILE_SIZE, BLUE, PLAYER_COLORS, MOVEMENT_PATH, SCREEN_HEIGHT, SCREEN_WIDTH, PROPERTY_BORDER, BLACK
 from property import Property
 
 class Map:
@@ -29,7 +29,7 @@ class Map:
                     if (row, col) in self.property_positions:
                         pygame.draw.rect(screen, PROPERTY_BORDER, (x, y, TILE_SIZE, TILE_SIZE), 6)
                     else:
-                        pygame.draw.rect(screen, BLUE, (x, y, TILE_SIZE, TILE_SIZE), 6)
+                        pygame.draw.rect(screen, BLACK, (x, y, TILE_SIZE, TILE_SIZE), 6)
 
         # Draw owned properties
         for pos, property_obj in self.properties.items():

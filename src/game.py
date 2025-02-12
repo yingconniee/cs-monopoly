@@ -71,12 +71,28 @@ class Game:
         pygame.time.wait(2000)  # Show for 2 seconds before continuing
 
     def display_money(self):
-        """Display players' money in four boxes under the dice, moved higher"""
-        font = pygame.font.Font(None, 24)
-        box_x = SCREEN_WIDTH // 2 - 150
-        box_y = SCREEN_HEIGHT - 150  # Move boxes up by 50 pixels
+        """Display players' money in four boxes under the dice"""
+        font = pygame.font.Font(None, 30)  # Font for text
+        box_width = 130  # Width of each box
+        box_height = 60  # Height of each box
+        box_spacing = 20  # Space between boxes
+
+        # Calculate starting position for centering boxes
+        total_width = (box_width * len(self.players)) + (box_spacing * (len(self.players) - 1))
+        start_x = (SCREEN_WIDTH - total_width) // 2  # Centered horizontally
+        box_y = SCREEN_HEIGHT - 200  # Position above bottom
 
         for i, player in enumerate(self.players):
-            pygame.draw.rect(self.screen, (200, 200, 200), (box_x + (i * 80), box_y, 70, 50))
-            money_text = font.render(f"{player.name}: ${player.money}", True, (0, 0, 0))
-            self.screen.blit(money_text, (box_x + (i * 80) + 5, box_y + 15))
+            box_x = start_x + (i * (box_width + box_spacing))  # Position each box
+
+            # Draw rectangle box
+            pygame.draw.rect(self.screen, (200, 200, 200), (box_x, box_y, box_width, box_height), border_radius=8)
+            pygame.draw.rect(self.screen, (0, 0, 0), (box_x, box_y, box_width, box_height), 3, border_radius=8)  # Black border
+
+            # Render player name
+            name_text = font.render(player.name, True, (0, 0, 0))
+            self.screen.blit(name_text, (box_x + 10, box_y + 10))
+
+            # Render player money
+            money_text = font.render(f"${player.money}", True, (0, 0, 0))
+            self.screen.blit(money_text, (box_x + 10, box_y + 35))
