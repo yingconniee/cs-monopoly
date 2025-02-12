@@ -48,10 +48,10 @@ while running:
     for player in players:
         player.draw(screen)  # Draw all players
 
-    game.display_money()  # Show player money in boxes
+    game.display_money()  # Show player money
 
     pygame.display.flip()
-    running = game.next_turn()
+    running = game.next_turn()  # Move to the next turn and check for game end
 
 pygame.quit()
 

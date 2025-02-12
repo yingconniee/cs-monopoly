@@ -26,9 +26,9 @@ class Game:
 
     def next_turn(self):
         """Advances to the next player's turn and checks for win condition"""
-        # if self.current_turn >= self.max_rounds:
-        #     self.show_winner_popup()
-        #     return False  # End game
+        if self.current_turn >= self.max_rounds:
+          self.show_winner_popup()
+          return False  # End game
 
         if len(self.players) == 1:  # If only one player is left, they win
             self.show_winner_popup()
@@ -96,3 +96,24 @@ class Game:
             # Render player money
             money_text = font.render(f"${player.money}", True, (0, 0, 0))
             self.screen.blit(money_text, (box_x + 10, box_y + 35))
+    
+    def show_winner_popup(self):
+        """Displays a popup announcing the winner"""
+        winner = self.get_winner()  # Get the player with the most money
+        message = f"{winner.name} is the winner!! Congratulations!!"
+
+        pygame.font.init()
+        font = pygame.font.Font(None, 40)
+        popup_width, popup_height = 700, 150
+        popup_surface = pygame.Surface((popup_width, popup_height))
+        popup_surface.fill((255, 255, 255))
+        pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
+
+        text_surface = font.render(message, True, (0, 0, 0))
+        popup_surface.blit(text_surface, (20, 50))
+
+        self.screen.blit(popup_surface, (SCREEN_WIDTH // 2 - popup_width // 2, SCREEN_HEIGHT // 2 - popup_height // 2))
+        pygame.display.flip()
+        pygame.time.wait(4000)  # Show the popup for 4 seconds
+
+        pygame.quit()  # Quit game after showing winner
