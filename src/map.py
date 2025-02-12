@@ -14,9 +14,9 @@ class Map:
 
         # Scale houses
         self.house_images = {
-            1: pygame.transform.scale(pygame.image.load("assets/level1_2.png"), (TILE_SIZE + 50, TILE_SIZE + 50)),  
-            2: pygame.transform.scale(pygame.image.load("assets/level2.png"), (TILE_SIZE + 50, TILE_SIZE + 50)),  
-            3: pygame.transform.scale(pygame.image.load("assets/level3.png"), (TILE_SIZE + 50, TILE_SIZE + 50)),  
+            1: pygame.transform.scale(pygame.image.load("assets/level1_2.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
+            2: pygame.transform.scale(pygame.image.load("assets/level2.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
+            3: pygame.transform.scale(pygame.image.load("assets/level3.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
         }
 
     def draw(self, screen):
@@ -41,7 +41,7 @@ class Map:
 
                 if property_obj.level in self.house_images:
                     house_image = self.house_images[property_obj.level]
-                    screen.blit(house_image, (x - 25, y - 25))  # Adjusted placement
+                    screen.blit(house_image, (x - 15, y - 15))  # Adjusted placement
 
                 self.draw_level_dots(screen, x, y, property_obj.level, border_color)
 

@@ -47,7 +47,7 @@ class Property:
 
                 # Check if player is bankrupt
                 if player.money <= 0:
-                    game.remove_player(player, screen)
+                    game.remove_player(player)
             
             if self.owner == player.name and not self.just_bought:
                 self.upgrade(player, screen, game)  # Allow player to upgrade if they own the property and it wasn't just bought
