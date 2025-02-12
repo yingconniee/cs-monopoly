@@ -40,9 +40,12 @@ class Game:
         self.current_turn += 1  # Move to next turn
         return True  # Continue game
 
-    def get_winner(self):
-        """Determines the player with the most money"""
-        return max(self.players, key=lambda player: player.money)  # Find the richest player
+    def get_winners(self):
+     """Determines the players with the most money"""
+     max_money = max(player.money for player in self.players)  # Find the highest money amount
+     winners = [player for player in self.players if player.money == max_money]  # Get all players with that amount
+     return winners
+
 
     def get_player_by_name(self, name):
         """Find player by name"""
@@ -98,19 +101,28 @@ class Game:
             self.screen.blit(money_text, (box_x + 10, box_y + 35))
     
     def show_winner_popup(self):
-        """Displays a popup announcing the winner"""
-        winner = self.get_winner()  # Get the player with the most money
-        message = f"{winner.name} is the winner!! Congratulations!!"
+        """Displays a popup announcing the winners"""
+        winners = self.get_winners()  # Get all players with the highest money
+
+        if len(winners) == 1:
+            message = f"{winners[0].name} is the winner!! Congratulations!!"
+        else:
+            winner_names = ", ".join([winner.name for winner in winners])
+            message = f"{winner_names} are the winners!! Congratulations!!"
 
         pygame.font.init()
         font = pygame.font.Font(None, 40)
-        popup_width, popup_height = 700, 150
+        popup_width, popup_height = 700, 200
         popup_surface = pygame.Surface((popup_width, popup_height))
         popup_surface.fill((255, 255, 255))
         pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
 
-        text_surface = font.render(message, True, (0, 0, 0))
-        popup_surface.blit(text_surface, (20, 50))
+            # Wrap text if there are multiple winners
+        y_offset = 50
+        for line in message.split("!! "):  # Split message if too long
+            text_surface = font.render(line, True, (0, 0, 0))
+            popup_surface.blit(text_surface, (20, y_offset))
+            y_offset += 50
 
         self.screen.blit(popup_surface, (SCREEN_WIDTH // 2 - popup_width // 2, SCREEN_HEIGHT // 2 - popup_height // 2))
         pygame.display.flip()
