@@ -3,6 +3,8 @@ from game import Game
 from player import Player
 from bot import Bot
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from bot import Grudger, Detective, Cheater
+import random
 
 # Initialize screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -92,12 +94,32 @@ else:
     num_bots = 4 - num_players
 
 players = []
+used_images = dict()
 
 for i in range(num_players):
-    players.append(Player(f"Player{i+1}", player_images[f"Player{i+1}"], starting_pos, player_offsets[i]))
+    player_name = f"Player{i+1}"
+    player_image = player_images[player_name]
+    used_images[player_name] = player_image  # Mark as used
+    players.append(Player(player_name, player_image, starting_pos, player_offsets[i]))
 
-for i in range(num_bots):
-    players.append(Bot(f"Bot{i+1}", player_images[f"Player{num_players + i + 1}"], starting_pos, player_offsets[num_players + i]))
+#for i in range(num_bots):
+   # players.append(Bot(f"Bot{i+1}", player_images[f"Player{num_players + i + 1}"], starting_pos, player_offsets[num_players + i]))
+# Add specialized bots based on available slots
+
+# Filter available images that were not used by human players
+available_images = [img for name, img in player_images.items() if name not in used_images]
+
+# Randomly select `num_bots` unique bot types
+selected_bot_types = random.sample([Grudger, Detective, Cheater], num_bots)
+
+# Assign a unique image to each selected bot
+selected_bots = []
+for i, bot_class in enumerate(selected_bot_types):
+    bot = bot_class(bot_class.__name__, available_images[i], starting_pos, player_offsets[i + num_players])
+    selected_bots.append(bot)
+
+# Add the required number of bots
+players.extend(selected_bots)  # Ensures the correct number of bots are added
 
 game = Game(screen, players, background_image)
 pygame.font.init()

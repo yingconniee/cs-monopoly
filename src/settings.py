@@ -29,7 +29,7 @@ PLAYER_COLORS = {
     "Player2": (0, 255, 0),    # Green
     "Player3": (0, 0, 255),    # Blue
     "Player4": (255, 255, 0),  # Yellow
-    "Bot1": (255, 165, 0),     # Orange
-    "Bot2": (128, 0, 128),     # Purple
-    "Bot3": (0, 255, 255),     # Cyan
+    "Grudger": (255, 165, 0),     # Orange
+    "Detective": (128, 0, 128),     # Purple
+    "Cheater": (0, 255, 255),     # Cyan
 }

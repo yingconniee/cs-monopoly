@@ -39,8 +39,12 @@ class Property:
             if self.owner is None:  
                 if player.is_human:
                     self.show_buy_popup(screen, player, property_name, game)  # Human players get a buy option
-                else:    
-                    self.buy(player)  # Bots buy instantly
+                else:
+                    if hasattr(player, "interact_with_property"):
+                        player.interact_with_property(self, screen, game)  # Call bot-specific interaction
+                    else:
+                        self.buy(player)  # Default behavior for generic bots
+
             elif self.owner != player.name:  # If player steps on someone else's property, pay rent
                 rent_amount = self.calculate_rent()
                 player.money -= rent_amount
