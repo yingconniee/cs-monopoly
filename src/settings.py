@@ -25,8 +25,11 @@ MOVEMENT_PATH = (
 # Players
 
 PLAYER_COLORS = { 
-    "Player1": (255, 0, 0),  
-    "Bot2": (0, 255, 0),    
-    "Bot3": (252, 15, 192), 
-    "Bot4": (255, 255, 0)  
+    "Player1": (255, 0, 0),    # Red
+    "Player2": (0, 255, 0),    # Green
+    "Player3": (0, 0, 255),    # Blue
+    "Player4": (255, 255, 0),  # Yellow
+    "Bot1": (255, 165, 0),     # Orange
+    "Bot2": (128, 0, 128),     # Purple
+    "Bot3": (0, 255, 255),     # Cyan
 }
