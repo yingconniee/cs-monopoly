@@ -20,7 +20,7 @@ player_images = {
 starting_pos = [10, 10]
 player_offsets = [(5, 5), (35, 5), (5, 35), (35, 35)]
 
-def start_screen(screen):
+def start_screen(screen, game):
     """Display the start screen and get game mode and number of players"""
     pygame.font.init()
     font = pygame.font.Font(None, 36)
@@ -30,7 +30,7 @@ def start_screen(screen):
     single_player_text = font.render("1. Single Player", True, (0, 0, 0))
     multiplayer_text = font.render("2. Multiplayer", True, (0, 0, 0))
 
-    screen.fill((255, 255, 255))
+    screen.blit(background_image, (0, 0))
     screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 4))
     screen.blit(single_player_text, (SCREEN_WIDTH // 2 - single_player_text.get_width() // 2, SCREEN_HEIGHT // 2))
     screen.blit(multiplayer_text, (SCREEN_WIDTH // 2 - multiplayer_text.get_width() // 2, SCREEN_HEIGHT // 2 + 50))
@@ -59,7 +59,7 @@ def get_number_of_players(screen):
     font = pygame.font.Font(None, 36)
     prompt_text = font.render("Enter number of players (2-4):", True, (0, 0, 0))
 
-    screen.fill((255, 255, 255))
+    screen.blit(background_image, (0, 0))
     screen.blit(prompt_text, (SCREEN_WIDTH // 2 - prompt_text.get_width() // 2, SCREEN_HEIGHT // 2))
     pygame.display.flip()
 
@@ -78,7 +78,10 @@ def get_number_of_players(screen):
 
     return num_players
 
-game_mode = start_screen(screen)
+# Initialize game with an empty list of players to draw the map
+game = Game(screen, [], background_image)
+
+game_mode = start_screen(screen, game)
 
 # Determine number of players and bots
 if game_mode == "single":
