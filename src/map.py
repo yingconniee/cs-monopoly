@@ -12,6 +12,13 @@ class Map:
         # Assign unique property names
         self.property_names = {pos: f"MCS{index:03d}" for index, pos in enumerate(self.property_positions, start=1)}
 
+        # Identify available positions for minigames
+        available_positions = [pos for pos in MOVEMENT_PATH if pos not in self.property_positions]
+        self.minigame_positions = set(random.sample(available_positions, 5))  # Randomly select 5 positions for minigames
+
+        # Load minigame marker image
+        self.minigame_marker = pygame.transform.scale(pygame.image.load("assets/ghost.png"), (TILE_SIZE, TILE_SIZE))
+
         # Scale houses
         self.house_images = {
             1: pygame.transform.scale(pygame.image.load("assets/level1_2.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
@@ -31,6 +38,11 @@ class Map:
                     else:
                         pygame.draw.rect(screen, BLACK, (x, y, TILE_SIZE, TILE_SIZE), 6)
 
+        # Draw minigame markers
+        for pos in self.minigame_positions:
+            x, y = pos[1] * TILE_SIZE, pos[0] * TILE_SIZE
+            screen.blit(self.minigame_marker, (x, y))
+
         # Draw owned properties
         for pos, property_obj in self.properties.items():
             x, y = pos[1] * TILE_SIZE, pos[0] * TILE_SIZE
@@ -41,7 +53,7 @@ class Map:
 
                 if property_obj.level in self.house_images:
                     house_image = self.house_images[property_obj.level]
-                    screen.blit(house_image, (x - 15, y - 15))  # Adjusted placement
+                    screen.blit(house_image, (x - 25, y - 25))  # Adjusted placement
 
                 self.draw_level_dots(screen, x, y, property_obj.level, border_color)
 
