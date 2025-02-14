@@ -53,7 +53,7 @@ class Map:
 
                 if property_obj.level in self.house_images:
                     house_image = self.house_images[property_obj.level]
-                    screen.blit(house_image, (x - 25, y - 25))  # Adjusted placement
+                    screen.blit(house_image, (x - 10, y - 15))  # Adjusted placement
 
                 self.draw_level_dots(screen, x, y, property_obj.level, border_color)
 
