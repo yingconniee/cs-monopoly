@@ -11,7 +11,7 @@ class Game:
         self.players = players
         self.background_image = background_image
         self.current_turn = 0
-        self.max_rounds = 10
+        self.max_rounds = 30
         self.running = True
 
         # Initialize the game map
@@ -26,13 +26,11 @@ class Game:
 
     def next_turn(self):
         """Advances to the next player's turn and checks for win condition"""
-        if self.current_turn >= self.max_rounds:
-          self.show_winner_popup()
-          return False  # End game
+        total_turns = self.max_rounds * len(self.players)  # ✅ 10 rounds * number of players
 
-        if len(self.players) == 1:  # If only one player is left, they win
+        if self.current_turn >= total_turns:  # ✅ Game ends after all players have played 10 rounds
             self.show_winner_popup()
-            return False
+            return False  # End game
 
         current_player = self.players[self.current_turn % len(self.players)]
         current_player.take_turn(self.screen, self)  # Player takes their turn
