@@ -12,7 +12,7 @@ class Bot(Player):
         self.move(roll, screen, game)
 
 
-class Grudger(Bot):
+class Cheater(Bot):
     """Bot2 always buys and upgrades properties"""
     def interact_with_property(self, property, screen, game):
         if property.owner is None:
@@ -21,7 +21,7 @@ class Grudger(Bot):
             property.upgrade(self, screen, game)  # Upgrade if owned
 
 
-class Detective(Bot):
+class Grudger(Bot):
     """Bot3 will not buy property until Player1 buys at least one"""
     def __init__(self, name, image, pos, offset):
         super().__init__(name, image, pos, offset)
@@ -38,7 +38,7 @@ class Detective(Bot):
             property.upgrade(self, screen, game)  # Upgrade if owned
 
 
-class Cheater(Bot):
+class Detective(Bot):
     """Bot4 buys on second visit, skips third/fourth, then mirrors Player1"""
     def __init__(self, name, image, pos, offset):
         super().__init__(name, image, pos, offset)
