@@ -1,4 +1,5 @@
 from player import Player
+import random
 
 class Bot(Player):
     def __init__(self, name, image, pos, offset):
@@ -10,6 +11,9 @@ class Bot(Player):
         roll = game.dice.roll(screen)
         print(f"{self.name} rolled {roll}")
         self.move(roll, screen, game)
+    
+    def play_minigame(self):
+        self.money += random.choice([500, -500])
 
 
 class Cheater(Bot):

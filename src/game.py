@@ -129,3 +129,6 @@ class Game:
         pygame.time.wait(4000)  # Show the popup for 4 seconds
 
         pygame.quit()  # Quit game after showing winner
+    
+
+

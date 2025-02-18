@@ -32,13 +32,6 @@ class Level:
         player_start_pos_x, player_start_pos_y = PLAYER_START_POSITIONS[0]
         self.player = Player(player_start_pos_x, player_start_pos_y, PLAYER_SPEED, bullet_group, self.map, 0, self.game_font)
 
-        # Checkpoint Flag
-        self.at_checkpoint = False
-
-        # Student Image
-        self.student_image = pygame.image.load("minigames/ghostbuster/assets/student/student.png").convert_alpha()
-        self.student_image = pygame.transform.scale(self.student_image, (120, 120)) 
-
         self.game = game
         self.ghost_killed = 0
 
@@ -63,6 +56,9 @@ class Level:
             self.spawn_ghost()
 
     def update(self, delta_time):
+        if self.game.game_over or self.game.won:
+            return
+        
         # Check if player is alive
         if self.player.health > 0:
             self.player.update(delta_time)
@@ -104,17 +100,5 @@ class Level:
             ghost.render(screen, camera)
         for item in self.item_group:
             item.render(screen, camera)
-
-        # Render the custom image for students at the checkpoint positions in the last level
-        for checkpoint in MAPS_CHECKPOINTS[0]:
-            checkpoint_x, checkpoint_y = checkpoint
-            x = checkpoint_x * TILE_SIZE - camera.offset_x
-            y = checkpoint_y * TILE_SIZE - camera.offset_y
-            screen.blit(self.student_image, (x, y))
-
-        # Display the message when at checkpoint
-        if self.at_checkpoint:
-            message = "Press E to rescue"
-            draw_text(screen, message, self.game_font, (255, 255, 255), SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)
 
 

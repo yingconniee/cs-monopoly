@@ -1,5 +1,10 @@
 import pygame
 from settings import TILE_SIZE, MOVEMENT_PATH
+from minigames.ghostbuster.main import main as ghostbuster_main
+from settings import SCREEN_HEIGHT, SCREEN_WIDTH
+
+background_image = pygame.image.load("assets/background.tiff")
+background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 class Player:
     def __init__(self, name, image, pos, offset, is_human=True):
@@ -26,6 +31,8 @@ class Player:
                             print(f"{self.name} rolled {roll}")
                             self.move(roll, screen, game)
                             waiting = False  # End turn after moving
+                        if tuple(self.pos) in game.map.minigame_positions:
+                                self.play_minigame(screen, game)
 
     
     def draw(self, screen):
@@ -53,3 +60,19 @@ class Player:
         property = game.map.properties.get(tuple(self.pos))
         if property:
             property.interact(self, screen, game.map, game)
+
+    def play_minigame(self, screen, game):
+        game_won = ghostbuster_main()
+
+        if game_won:
+            self.money += 500
+        else:
+            self.money -= 500
+        
+        screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        screen.blit(background_image, (0, 0))
+        game.map.draw(screen)  
+        for player in game.players:
+            player.draw(screen)  
+
+        pygame.display.flip()

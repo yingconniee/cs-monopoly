@@ -49,6 +49,9 @@ class Ghost(pygame.sprite.Sprite):
         self.hit_time_since_last_frame = 0
 
     def update(self, player, delta_time):
+        if self.game.game_over or self.game.won:
+            return
+        
         if not self.is_dying:
             # Move ghost towards the player
             direction = pygame.math.Vector2(player.pos) - pygame.math.Vector2(self.rect.center)
@@ -96,6 +99,7 @@ class Ghost(pygame.sprite.Sprite):
             if self.is_dying and self.frame_index == len(self.current_animation) - 1:
                 self.kill()
                 self.game.ghost_killed += 1
+                print(self.game.ghost_killed)
 
         # Update hit animation frame index based on time
         if self.is_hit:

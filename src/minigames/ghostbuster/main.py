@@ -26,20 +26,26 @@ def main():
     while running:
         clock.tick(FPS)
         delta_time = clock.tick(60) / 1000
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if game.game_over and event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-            if game.won and event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-
+            if game.game_over:
+                running = False
+                game.display_game_over()
+                pygame.time.delay(3000)
+                return game.won
+            elif game.won:
+                running = False
+                game.display_winner()
+                pygame.time.delay(3000)
+                return game.won
+                
         game.update(delta_time)
         game.render()
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()

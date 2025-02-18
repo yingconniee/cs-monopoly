@@ -18,6 +18,8 @@ class Game:
         self.game_over = False
         self.ghost_killed = 0
         self.won = False
+        self.countdown_start_time = 0  
+        self.countdown_duration = 3000
 
     def update(self, delta_time):
         self.level.update(delta_time)
@@ -33,14 +35,9 @@ class Game:
             self.level.update(delta_time)
 
     def render(self):
-        if self.game_over:
-            self.display_game_over()
-        elif self.won:
-            self.display_winner()
-        else:
-            self.screen.fill((0, 0, 0))
-            self.level.render(self.screen, self.camera)
-            pygame.display.flip()
+        self.screen.fill((0, 0, 0))
+        self.level.render(self.screen, self.camera)
+        pygame.display.flip()
 
     def display_game_over(self):
         self.screen.fill((0, 0, 0))
