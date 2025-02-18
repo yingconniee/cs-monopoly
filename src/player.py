@@ -66,8 +66,10 @@ class Player:
 
         if game_won:
             self.money += 500
+            result_message = f"You won the minigame! You earned $500."
         else:
             self.money -= 500
+            result_message = f"You lost the minigame! You lost $500."
         
         screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         screen.blit(background_image, (0, 0))
@@ -76,3 +78,18 @@ class Player:
             player.draw(screen)  
 
         pygame.display.flip()
+
+        self.show_popup(screen, result_message)
+    
+    def show_popup(self, screen, message):
+        font = pygame.font.Font(None, 32)
+        popup_surface = pygame.Surface((600, 120))
+        popup_surface.fill((255, 255, 255))
+        pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
+
+        text_surface = font.render(message, True, (0, 0, 0))
+        popup_surface.blit(text_surface, (20, 50))
+
+        screen.blit(popup_surface, (SCREEN_WIDTH // 2 - 300, SCREEN_HEIGHT // 2 - 60))
+        pygame.display.flip()
+        pygame.time.wait(3000)
