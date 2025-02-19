@@ -11,10 +11,20 @@ class Bot(Player):
         roll = game.dice.roll(screen)
         print(f"{self.name} rolled {roll}")
         self.move(roll, screen, game)
+        if tuple(self.pos) in game.map.minigame_positions:
+            self.play_minigame(screen)
     
-    def play_minigame(self):
-        self.money += random.choice([500, -500])
+    def play_minigame(self, screen):
+        money = random.choice([500, -500])
+        print(money)
+        self.money += money
 
+        if money == "500":
+            result_message = "You won the minigame! You earned $500."
+        else:
+            result_message = "You lost the minigame! You lost $500."
+
+        self.show_popup(screen, result_message)
 
 class Cheater(Bot):
     """Bot2 always buys and upgrades properties"""
