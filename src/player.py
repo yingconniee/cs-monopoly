@@ -15,6 +15,7 @@ class Player:
         self.offset = offset
         self.is_human = is_human
         self.money = 10000  # Start money
+        self.minigame_played = False
 
     def take_turn(self, screen, game):
         """Handles player's turn with keyboard input"""
@@ -31,8 +32,6 @@ class Player:
                             print(f"{self.name} rolled {roll}")
                             self.move(roll, screen, game)
                             waiting = False  # End turn after moving
-                        # if tuple(self.pos) in game.map.minigame_positions:
-                        #         self.play_minigame(screen, game)
 
     
     def draw(self, screen):
@@ -60,6 +59,10 @@ class Player:
         property = game.map.properties.get(tuple(self.pos))
         if property:
             property.interact(self, screen, game.map, game)
+        
+        if tuple(self.pos) in game.map.minigame_positions and not self.minigame_played:
+            self.play_minigame(screen, game)
+            self.minigame_played = True
 
     def play_minigame(self, screen, game):
         game_won = ghostbuster_main()
@@ -93,3 +96,5 @@ class Player:
         screen.blit(popup_surface, (SCREEN_WIDTH // 2 - 300, SCREEN_HEIGHT // 2 - 60))
         pygame.display.flip()
         pygame.time.wait(3000)
+
+        self.minigame_played = False

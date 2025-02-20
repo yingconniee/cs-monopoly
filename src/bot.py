@@ -14,7 +14,7 @@ class Bot(Player):
         if tuple(self.pos) in game.map.minigame_positions:
             self.play_minigame(screen)
     
-    def play_minigame(self, screen):
+    def play_minigame(self, screen, game):
         money = random.choice([500, -500])
         print(money)
         self.money += money
@@ -34,7 +34,7 @@ class Cheater(Bot):
         elif property.owner == self.name:
             property.upgrade(self, screen, game)  # Upgrade if owned
     
-    def cheat(self, property): # to be fixed here, currently only player 1
+    def cheat(self, game, player): # to be fixed here, currently only player 1
         return True
 
 class Grudger(Bot):
@@ -54,9 +54,9 @@ class Grudger(Bot):
         elif property.owner == self.name:
             property.upgrade(self, screen, game)  # Upgrade if owned
     
-    def cheat(self, property): # to be fixed here, currently only player 1
-        if property.player_1_cheat_store[self.name] == True:
-            print(f"{self.name} remembers Player1 cheated! Now cheating back forever.")
+    def cheat(self, game, player):
+        if self.name in game.cheat_map[player.name]:
+            print(f"{self.name} remembers {player.name} cheated! Now cheating back forever.")
             return True
         else:
             print(f"{self.name} cooperates unless Player1 cheats.")
@@ -92,7 +92,12 @@ class Detective(Bot):
         elif property.owner == self.name:
             property.upgrade(self, screen, game)  # Upgrade if owned
     
-    def cheat(self, property): # to be fixed here, currently only player 1
-        cheat = self.cheat_sequence[self.curr_cheat_index]
-        self.curr_cheat_index = (self.curr_cheat_index + 1) % len(self.cheat_sequence)
+    def cheat(self, game, player): # to be fixed here, currently only player 1
+        if self.name in game.cheat_map[player.name]:
+            print(f"{self.name} saw {player.name} cheated! Now cheating back forever.")
+            return True
+        else:
+            cheat = self.cheat_sequence[self.curr_cheat_index]
+            self.curr_cheat_index = (self.curr_cheat_index + 1) % len(self.cheat_sequence)
+            print(f"{self.name} following its strategy to cheat.")
         return cheat

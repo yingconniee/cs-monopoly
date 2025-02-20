@@ -15,6 +15,7 @@ class Game:
         self.max_rounds = 30
         self.running = True
         self.cooperation_map = defaultdict(set)
+        self.cheat_map = defaultdict(set)
 
         # Initialize the game map
         self.map = Map()
