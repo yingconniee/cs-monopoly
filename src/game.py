@@ -3,6 +3,7 @@ import random
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from map import Map
 from dice import Dice
+from collections import defaultdict
 
 class Game:
     def __init__(self, screen, players, background_image):
@@ -13,6 +14,7 @@ class Game:
         self.current_turn = 0
         self.max_rounds = 30
         self.running = True
+        self.cooperation_map = defaultdict(set)
 
         # Initialize the game map
         self.map = Map()

@@ -9,17 +9,19 @@ class Property:
         self.owner = None  # No owner at start
         self.level = 0  # No house at start
         self.just_bought = False  # Flag to track if the property was just bought
+        self.player_1_cheat_store = dict()
+        self.players = ['Cheater', 'Grudger', 'Detective']
+
+        for player in self.players: # to be fixed here, currently only player 1
+            self.player_1_cheat_store[player] = False
 
     def buy(self, player):
         """Allows a player to buy the property if it's unowned"""
         if self.owner is None:  # If not owned, allow purchase
             self.owner = player.name
             self.level = 1  # Start with Level 1 house
-            self.just_bought = True  # Set the just_bought flag
+            self.just_bought = True  # Set the just_bought flag0
             print('Property bought!')
-
-
-
 
     def upgrade(self, player, screen, game):
         """Ask the player if they want to upgrade (max level 3)"""
@@ -46,20 +48,49 @@ class Property:
                         self.buy(player)  # Default behavior for generic bots
 
             elif self.owner != player.name:  # If player steps on someone else's property, pay rent
-                rent_amount = self.calculate_rent()
-                player.money -= rent_amount
                 owner = game.get_player_by_name(self.owner)
-                if owner:
-                    owner.money += rent_amount  # Transfer rent to property owner
+                print(game.cooperation_map)
+                # Check if cooperation already exists
+                if owner and player.name in game.cooperation_map[owner.name] and owner.name in game.cooperation_map[player.name]:
+                    cheat = self.cheat_popup(screen, player, owner, game)
+                    if cheat:
+                        if player.name == "player1":
+                            self.player_1_cheat_store[owner.name] = True
+                        print(f'{player.name} cheated on {owner.name} and charged rent.')
+                        rent_amount = self.calculate_rent()
+                        player.money -= rent_amount
+                        owner.money += rent_amount
+                        print(f"{player.name} paid ${rent_amount} rent to {owner.name}")
 
-                # Check if player is bankrupt
-                if player.money <= 0:
-                    game.remove_player(player)
+                    else:
+                        print(f'Cooperation between {owner.name} and {player.name} exists. No rent charged.')
+                else:
+                    # Show cooperation popup only if they haven't agreed yet
+                    if owner and owner.is_human and not player.is_human:
+                        cooperation = self.show_cooperation_popup(screen, owner, player, game)
+                        if cooperation:
+                            print(f"{owner.name} and {player.name} agreed to cooperate. No rent will be charged.")
+                            game.cooperation_map[player.name].add(owner.name)
+                            game.cooperation_map[owner.name].add(player.name)
+                        else:
+                            rent_amount = self.calculate_rent()
+                            player.money -= rent_amount
+                            owner.money += rent_amount
+                            print(f"{player.name} paid ${rent_amount} rent to {owner.name}")
+
+                    else:
+                        rent_amount = self.calculate_rent()
+                        player.money -= rent_amount
+                        owner.money += rent_amount
+                        print(f"{player.name} paid ${rent_amount} rent to {owner.name}")
             
+            if player.money <= 0:
+                game.remove_player(player)
+
             if self.owner == player.name and not self.just_bought:
                 self.upgrade(player, screen, game)  # Allow player to upgrade if they own the property and it wasn't just bought
             else:
-                self.just_bought = False  # Reset the just_bought flag after the first visit
+                self.just_bought = False
 
     def calculate_rent(self):
         """Returns rent based on property level"""
@@ -136,3 +167,97 @@ class Property:
         """Increase property level"""
         if self.level < 3:
             self.level += 1  # Upgrade up to Level 3
+    
+    def show_cooperation_popup(self, screen, owner, player, game):
+        """Popup asking human player whether to cooperate with a bot"""
+        pygame.font.init()
+        font = pygame.font.Font(None, 28)
+        popup_width, popup_height = 420, 140
+        popup_surface = pygame.Surface((popup_width, popup_height))
+        popup_surface.fill((255, 255, 255))
+        pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
+
+        # Render message
+        message = f"Do you want to cooperate with {player.name}?"
+        yes_text = font.render("Press Y to Cooperate", True, (0, 0, 0))
+        no_text = font.render("Press N to Charge Rent", True, (0, 0, 0))
+
+        text_surface = font.render(message, True, (0, 0, 0))
+        popup_surface.blit(text_surface, (20, 40))
+        popup_surface.blit(yes_text, (20, 80))
+        popup_surface.blit(no_text, (20, 110))
+
+        screen.blit(popup_surface, (SCREEN_WIDTH // 2 - popup_width // 2, SCREEN_HEIGHT // 2 - popup_height // 2))
+        pygame.display.flip()
+
+        waiting = True
+        cooperation = False
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_y:  # Cooperate
+                        cooperation = True
+                        waiting = False
+                    elif event.key == pygame.K_n:  # Charge rent
+                        cooperation = False
+                        waiting = False
+
+        screen.blit(game.background_image, (0, 0))  
+        game.map.draw(screen)
+        for p in game.players:
+            p.draw(screen)
+        game.display_money()
+        pygame.display.flip()
+        return cooperation
+    
+    def cheat_popup(self, screen, player, owner, game):
+        """Popup asking human player whether they want to cheat on a cooperating player"""
+        if owner.is_human:
+            pygame.font.init()
+            font = pygame.font.Font(None, 28)
+            popup_width, popup_height = 420, 140
+            popup_surface = pygame.Surface((popup_width, popup_height))
+            popup_surface.fill((255, 255, 255))
+            pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
+
+            # Render message
+            message = f"You are cooperating with {owner.name}. Do you want to cheat and charge rent?"
+            cheat_text = font.render("Press Y to Cheat (Charge Rent)", True, (255, 0, 0))  # Red text for cheating
+            respect_text = font.render("Press N to Respect Cooperation", True, (0, 0, 0))
+
+            text_surface = font.render(message, True, (0, 0, 0))
+            popup_surface.blit(text_surface, (20, 40))
+            popup_surface.blit(cheat_text, (20, 80))
+            popup_surface.blit(respect_text, (20, 110))
+
+            screen.blit(popup_surface, (SCREEN_WIDTH // 2 - popup_width // 2, SCREEN_HEIGHT // 2 - popup_height // 2))
+            pygame.display.flip()
+
+            waiting = True
+            cheat = False
+            while waiting:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        exit()
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_y:  # Cheat
+                            cheat = True
+                            waiting = False
+                        elif event.key == pygame.K_n:  # Respect Cooperation
+                            cheat = False
+                            waiting = False
+
+            screen.blit(game.background_image, (0, 0))  
+            game.map.draw(screen)
+            for p in game.players:
+                p.draw(screen)
+            game.display_money()
+            pygame.display.flip()
+        else:
+            cheat = player.cheat(self) # bot cheating logic
+
+        return cheat

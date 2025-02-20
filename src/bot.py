@@ -19,7 +19,7 @@ class Bot(Player):
         print(money)
         self.money += money
 
-        if money == "500":
+        if money == 500:
             result_message = "You won the minigame! You earned $500."
         else:
             result_message = "You lost the minigame! You lost $500."
@@ -33,16 +33,19 @@ class Cheater(Bot):
             property.buy(self)  # Buy instantly
         elif property.owner == self.name:
             property.upgrade(self, screen, game)  # Upgrade if owned
-
+    
+    def cheat(self, property): # to be fixed here, currently only player 1
+        return True
 
 class Grudger(Bot):
     """Bot3 will not buy property until Player1 buys at least one"""
     def __init__(self, name, image, pos, offset):
         super().__init__(name, image, pos, offset)
         self.waiting_for_player1 = True  # Track Player1's action
+        self.player_1_cheated = False
 
     def interact_with_property(self, property, screen, game):
-        player1 = game.get_player_by_name("Player1")
+        player1 = game.get_player_by_name("Player1") # to be fixed here, currently only player 1
 
         if property.owner is None:
             if self.waiting_for_player1 and player1 and any(p.owner == "Player1" for p in game.map.properties.values()):
@@ -50,14 +53,23 @@ class Grudger(Bot):
                 property.buy(self)  # Now buy property
         elif property.owner == self.name:
             property.upgrade(self, screen, game)  # Upgrade if owned
-
-
+    
+    def cheat(self, property): # to be fixed here, currently only player 1
+        if property.player_1_cheat_store[self.name] == True:
+            print(f"{self.name} remembers Player1 cheated! Now cheating back forever.")
+            return True
+        else:
+            print(f"{self.name} cooperates unless Player1 cheats.")
+            return False
+        
 class Detective(Bot):
     """Bot4 buys on second visit, skips third/fourth, then mirrors Player1"""
     def __init__(self, name, image, pos, offset):
         super().__init__(name, image, pos, offset)
         self.visit_count = {}  # Track visits per property
         self.mirroring_player1 = False  # Track when to mirror Player1
+        self.cheat_sequence = [False, False, True, False]
+        self.curr_cheat_index = 0
 
     def interact_with_property(self, property, screen, game):
         if property.position not in self.visit_count:
@@ -79,3 +91,8 @@ class Detective(Bot):
                     property.buy(self)  # Mirror Player1's buying action
         elif property.owner == self.name:
             property.upgrade(self, screen, game)  # Upgrade if owned
+    
+    def cheat(self, property): # to be fixed here, currently only player 1
+        cheat = self.cheat_sequence[self.curr_cheat_index]
+        self.curr_cheat_index = (self.curr_cheat_index + 1) % len(self.cheat_sequence)
+        return cheat
