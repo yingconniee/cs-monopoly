@@ -232,7 +232,7 @@ class Property:
         if owner.is_human and not player.is_human: # bot step on human player property
             pygame.font.init()
             font = pygame.font.Font(None, 28)
-            popup_width, popup_height = 420, 140
+            popup_width, popup_height = 520, 140
             popup_surface = pygame.Surface((popup_width, popup_height))
             popup_surface.fill((255, 255, 255))
             pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
