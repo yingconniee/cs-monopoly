@@ -31,8 +31,8 @@ class Player:
                             print(f"{self.name} rolled {roll}")
                             self.move(roll, screen, game)
                             waiting = False  # End turn after moving
-                        # if tuple(self.pos) in game.map.minigame_positions:
-                        #         self.play_minigame(screen, game)
+                        if tuple(self.pos) in game.map.minigame_positions:
+                            self.play_minigame(screen, game)
 
     
     def draw(self, screen):
