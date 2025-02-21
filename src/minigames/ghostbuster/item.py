@@ -12,9 +12,9 @@ class Item(pygame.sprite.Sprite):
         self.spawn_time = pygame.time.get_ticks()
 
         if self.item_type == 'bullet':
-            self.image = pygame.image.load("minigames/ghostbuster/assets/items/item_bullet.png").convert_alpha()
+            self.image = pygame.image.load("src/minigames/ghostbuster/assets/items/item_bullet.png").convert_alpha()
         elif self.item_type == 'health':
-            self.image = pygame.image.load("minigames/ghostbuster/assets/items/item_health.png").convert_alpha()
+            self.image = pygame.image.load("src/minigames/ghostbuster/assets/items/item_health.png").convert_alpha()
 
         self.image = pygame.transform.scale(self.image, (self.size, self.size))
         self.rect = self.image.get_rect(topleft=(self.x, self.y))

@@ -73,7 +73,7 @@ MAP_HEIGHT = len(MAP_LAYOUT_0) * TILE_SIZE
 ITEM_EXPIRATION_TIME = 10000
 
 # Font settings
-FONT_PATH = 'minigames/ghostbuster/assets/fonts/antiquity-print.ttf'
+FONT_PATH = 'src/minigames/ghostbuster/assets/fonts/antiquity-print.ttf'
 FONT_SIZE = 24
 
 # background_image = pygame.image.load("minigames/ghostbuster/assets/background.tiff").convert()

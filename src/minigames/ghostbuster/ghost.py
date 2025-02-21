@@ -19,18 +19,18 @@ class Ghost(pygame.sprite.Sprite):
         self.game = game  # Add game instance
 
         self.animations = {
-            "front": [pygame.transform.scale(pygame.image.load(f"minigames/ghostbuster/assets/ghost/front_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
-            "back": [pygame.transform.scale(pygame.image.load(f"minigames/ghostbuster/assets/ghost/back_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
-            "left": [pygame.transform.scale(pygame.image.load(f"minigames/ghostbuster/assets/ghost/left_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
-            "right": [pygame.transform.scale(pygame.image.load(f"minigames/ghostbuster/assets/ghost/right_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
-            "attack_left": [pygame.transform.scale(pygame.image.load(f"minigames/ghostbuster/assets/ghost/attack_left_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
-            "attack_right": [pygame.transform.scale(pygame.image.load(f"minigames/ghostbuster/assets/ghost/attack_right_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
-            "die": [pygame.transform.scale(pygame.image.load(f"minigames/ghostbuster/assets/ghost/die_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
-            "hit": [pygame.transform.scale(pygame.image.load(f"minigames/ghostbuster/assets/ghost/ghost_hit_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 7)]
+            "front": [pygame.transform.scale(pygame.image.load(f"src/minigames/ghostbuster/assets/ghost/front_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
+            "back": [pygame.transform.scale(pygame.image.load(f"src/minigames/ghostbuster/assets/ghost/back_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
+            "left": [pygame.transform.scale(pygame.image.load(f"src/minigames/ghostbuster/assets/ghost/left_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
+            "right": [pygame.transform.scale(pygame.image.load(f"src/minigames/ghostbuster/assets/ghost/right_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
+            "attack_left": [pygame.transform.scale(pygame.image.load(f"src/minigames/ghostbuster/assets/ghost/attack_left_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
+            "attack_right": [pygame.transform.scale(pygame.image.load(f"src/minigames/ghostbuster/assets/ghost/attack_right_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
+            "die": [pygame.transform.scale(pygame.image.load(f"src/minigames/ghostbuster/assets/ghost/die_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 5)],
+            "hit": [pygame.transform.scale(pygame.image.load(f"src/minigames/ghostbuster/assets/ghost/ghost_hit_{i}.png").convert_alpha(), (self.size, self.size)) for i in range(1, 7)]
         }
 
         self.health_images = [
-            pygame.image.load(f"minigames/ghostbuster/assets/ghost/health_bar_{i}.png").convert_alpha() for i in range(3, 0, -1)
+            pygame.image.load(f"src/minigames/ghostbuster/assets/ghost/health_bar_{i}.png").convert_alpha() for i in range(3, 0, -1)
         ]
 
         self.current_animation = self.animations["front"]

@@ -1,8 +1,8 @@
 import pygame
 import random
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT
-from map import Map
-from dice import Dice
+from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from src.map import Map
+from src.dice import Dice
 from collections import defaultdict
 
 class Game:

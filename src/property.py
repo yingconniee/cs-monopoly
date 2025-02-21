@@ -1,6 +1,6 @@
 import pygame
 import random
-from settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
 
 class Property:
     def __init__(self, position):
@@ -167,21 +167,25 @@ class Property:
             pygame.font.init()
             font = pygame.font.Font(None, 28)
             popup_width, popup_height = 420, 140
+            popup_x, popup_y = (screen.get_width() // 2 - popup_width // 2, 
+                                screen.get_height() // 2 - popup_height // 2)
+
             popup_surface = pygame.Surface((popup_width, popup_height))
             popup_surface.fill((255, 255, 255))
             pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
 
             # Render message
             message = f"Do you want to cooperate with {player.name}?"
+            text_surface = font.render(message, True, (0, 0, 0))
+            popup_surface.blit(text_surface, (popup_width // 2 - text_surface.get_width() // 2, 30))
+
             yes_text = font.render("Press Y to Cooperate", True, (0, 0, 0))
             no_text = font.render("Press N to Charge Rent", True, (0, 0, 0))
 
-            text_surface = font.render(message, True, (0, 0, 0))
-            popup_surface.blit(text_surface, (20, 40))
-            popup_surface.blit(yes_text, (20, 80))
-            popup_surface.blit(no_text, (20, 110))
+            popup_surface.blit(yes_text, (popup_width // 2 - yes_text.get_width() // 2, 70))
+            popup_surface.blit(no_text, (popup_width // 2 - no_text.get_width() // 2, 100))
 
-            screen.blit(popup_surface, (SCREEN_WIDTH // 2 - popup_width // 2, SCREEN_HEIGHT // 2 - popup_height // 2))
+            screen.blit(popup_surface, (popup_x, popup_y))
             pygame.display.flip()
 
             waiting = True
@@ -233,21 +237,25 @@ class Property:
             pygame.font.init()
             font = pygame.font.Font(None, 28)
             popup_width, popup_height = 520, 140
+            popup_x, popup_y = (screen.get_width() // 2 - popup_width // 2, 
+                                screen.get_height() // 2 - popup_height // 2)
+
             popup_surface = pygame.Surface((popup_width, popup_height))
             popup_surface.fill((255, 255, 255))
             pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
 
             # Render message
             message = f"You are cooperating with {player.name}. Do you want to cheat and charge rent?"
-            cheat_text = font.render("Press Y to Cheat (Charge Rent)", True, (255, 0, 0))  # Red text for cheating
+            text_surface = font.render(message, True, (0, 0, 0))
+            popup_surface.blit(text_surface, (popup_width // 2 - text_surface.get_width() // 2, 30))
+
+            cheat_text = font.render("Press Y to Cheat (Charge Rent)", True, (255, 0, 0))
             respect_text = font.render("Press N to Respect Cooperation", True, (0, 0, 0))
 
-            text_surface = font.render(message, True, (0, 0, 0))
-            popup_surface.blit(text_surface, (20, 40))
-            popup_surface.blit(cheat_text, (20, 80))
-            popup_surface.blit(respect_text, (20, 110))
+            popup_surface.blit(cheat_text, (popup_width // 2 - cheat_text.get_width() // 2, 70))
+            popup_surface.blit(respect_text, (popup_width // 2 - respect_text.get_width() // 2, 100))
 
-            screen.blit(popup_surface, (SCREEN_WIDTH // 2 - popup_width // 2, SCREEN_HEIGHT // 2 - popup_height // 2))
+            screen.blit(popup_surface, (popup_x, popup_y))
             pygame.display.flip()
 
             waiting = True
@@ -265,11 +273,14 @@ class Property:
                             cheat = False
                             waiting = False
 
-        elif not owner.is_human and player.is_human: # human step on bot's property
-            cheat = owner.cheat(game, player) # bot cheating logic
+        elif not owner.is_human and player.is_human:  # Human steps on bot's property
+            cheat = owner.cheat(game, player)  # Bot cheating logic
 
             font = pygame.font.Font(None, 28)
             popup_width, popup_height = 520, 140
+            popup_x, popup_y = (screen.get_width() // 2 - popup_width // 2, 
+                                screen.get_height() // 2 - popup_height // 2)
+
             popup_surface = pygame.Surface((popup_width, popup_height))
             popup_surface.fill((255, 255, 255))
             pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
@@ -282,13 +293,18 @@ class Property:
                 text_color = (0, 128, 0)  # Green for cooperation
 
             decision_surface = font.render(decision_text, True, text_color)
+            
+            # Center text inside popup
+            text_x = popup_width // 2 - decision_surface.get_width() // 2
+            text_y = popup_height // 2 - decision_surface.get_height() // 2
 
-            popup_surface.blit(decision_surface, (20, 60))
-            screen.blit(popup_surface, (SCREEN_WIDTH // 2 - popup_width // 2, SCREEN_HEIGHT // 2 - popup_height // 2))
+            popup_surface.blit(decision_surface, (text_x, text_y))
+            screen.blit(popup_surface, (popup_x, popup_y))
             pygame.display.flip()
 
             pygame.time.wait(2000)
-        
+
+        # Redraw the game screen after
         screen.blit(game.background_image, (0, 0))  
         game.map.draw(screen)
         for p in game.players:

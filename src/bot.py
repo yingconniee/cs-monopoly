@@ -1,4 +1,4 @@
-from player import Player
+from src.player import Player
 import random
 
 class Bot(Player):

@@ -1,15 +1,15 @@
 import pygame
 import random
 import time
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class Dice():
     def __init__(self):
         self.images = [
-            pygame.image.load("assets/dice1.png"),
-            pygame.image.load("assets/dice2.png"),
-            pygame.image.load("assets/dice3.png"),
-            pygame.image.load("assets/dice4.png"),
+            pygame.image.load("src/assets/dice1.png"),
+            pygame.image.load("src/assets/dice2.png"),
+            pygame.image.load("src/assets/dice3.png"),
+            pygame.image.load("src/assets/dice4.png"),
         ]
 
         self.dice_images = [pygame.transform.scale(img, (80, 80)) for img in self.images]

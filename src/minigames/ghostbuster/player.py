@@ -13,23 +13,23 @@ class Player(pygame.sprite.Sprite):
         self.game_font = game_font
 
         self.animations = {
-            "front": [pygame.image.load(f"minigames/ghostbuster/assets/player/front_{i}.png").convert_alpha() for i in range(1,5)],
-            "back": [pygame.image.load(f"minigames/ghostbuster/assets/player/back_{i}.png").convert_alpha() for i in range(1,5)],
-            "left": [pygame.image.load(f"minigames/ghostbuster/assets/player/left_{i}.png").convert_alpha() for i in range(1,5)],
-            "right": [pygame.image.load(f"minigames/ghostbuster/assets/player/right_{i}.png").convert_alpha() for i in range(1,5)],
+            "front": [pygame.image.load(f"src/minigames/ghostbuster/assets/player/front_{i}.png").convert_alpha() for i in range(1,5)],
+            "back": [pygame.image.load(f"src/minigames/ghostbuster/assets/player/back_{i}.png").convert_alpha() for i in range(1,5)],
+            "left": [pygame.image.load(f"src/minigames/ghostbuster/assets/player/left_{i}.png").convert_alpha() for i in range(1,5)],
+            "right": [pygame.image.load(f"src/minigames/ghostbuster/assets/player/right_{i}.png").convert_alpha() for i in range(1,5)],
         }
 
         self.shooting_images = {
-            "front": pygame.image.load("minigames/ghostbuster/assets/player/shooting_front.png").convert_alpha(),
-            "back": pygame.image.load("minigames/ghostbuster/assets/player/shooting_back.png").convert_alpha(),
-            "right": pygame.image.load("minigames/ghostbuster/assets/player/shooting_right.png").convert_alpha(),
-            "left": pygame.transform.flip(pygame.image.load("minigames/ghostbuster/assets/player/shooting_right.png").convert_alpha(), True, False)
+            "front": pygame.image.load("src/minigames/ghostbuster/assets/player/shooting_front.png").convert_alpha(),
+            "back": pygame.image.load("src/minigames/ghostbuster/assets/player/shooting_back.png").convert_alpha(),
+            "right": pygame.image.load("src/minigames/ghostbuster/assets/player/shooting_right.png").convert_alpha(),
+            "left": pygame.transform.flip(pygame.image.load("src/minigames/ghostbuster/assets/player/shooting_right.png").convert_alpha(), True, False)
         }
 
-        self.face_image = pygame.image.load("minigames/ghostbuster/assets/player/face.png").convert_alpha()
+        self.face_image = pygame.image.load("src/minigames/ghostbuster/assets/player/face.png").convert_alpha()
 
         self.health_images = [
-            pygame.image.load(f"minigames/ghostbuster/assets/player/health_bar_{i}.png").convert_alpha() for i in range(5, 0, -1)
+            pygame.image.load(f"src/minigames/ghostbuster/assets/player/health_bar_{i}.png").convert_alpha() for i in range(5, 0, -1)
         ]
 
         # Initial image setup

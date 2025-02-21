@@ -5,7 +5,7 @@ from .settings import *
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y, angle, current_level):
         super().__init__()
-        self.original_image = pygame.image.load("minigames/ghostbuster/assets/bullet/bullet.png").convert_alpha()
+        self.original_image = pygame.image.load("src/minigames/ghostbuster/assets/bullet/bullet.png").convert_alpha()
         self.original_image = pygame.transform.scale(self.original_image, (40, 20))  # Adjust dimensions as needed
         self.image = pygame.transform.rotate(self.original_image, -angle)  # Rotate the image based on the angle
         self.rect = self.image.get_rect(center=(x, y))
@@ -17,7 +17,7 @@ class Bullet(pygame.sprite.Sprite):
         ) * self.speed
 
         self.animations = {
-            "hit": [pygame.transform.scale(pygame.image.load(f"minigames/ghostbuster/assets/ghost/ghost_hit_{i}.png").convert_alpha(), (40, 40)) for i in range(1, 7)]
+            "hit": [pygame.transform.scale(pygame.image.load(f"src/minigames/ghostbuster/assets/ghost/ghost_hit_{i}.png").convert_alpha(), (40, 40)) for i in range(1, 7)]
         }
         self.is_hit = False
         self.hit_frame_index = 0

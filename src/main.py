@@ -1,24 +1,24 @@
 import pygame
-from game import Game
-from player import Player
-from bot import Bot
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT
-from bot import Grudger, Detective, Cheater
+from src.game import Game
+from src.player import Player
+from src.bot import Bot
+from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from src.bot import Grudger, Detective, Cheater
 import random
 import asyncio
 import sys
 
 # Initialize screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-background_image = pygame.image.load("assets/background.png")
+background_image = pygame.image.load("src/assets/background.png")
 background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # Load images
 player_images = {
-    "Player1": pygame.image.load("assets/student.png"),
-    "Player2": pygame.image.load("assets/player2.png"),
-    "Player3": pygame.image.load("assets/player3.png"),
-    "Player4": pygame.image.load("assets/player4.png"),
+    "Player1": pygame.image.load("src/assets/student.png"),
+    "Player2": pygame.image.load("src/assets/player2.png"),
+    "Player3": pygame.image.load("src/assets/player3.png"),
+    "Player4": pygame.image.load("src/assets/player4.png"),
 }
 
 starting_pos = [10, 10]
@@ -46,7 +46,7 @@ def start_screen(screen, game):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                exit()
+                sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     game_mode = "single"
@@ -73,7 +73,7 @@ def get_number_of_players(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                exit()
+                sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.unicode.isdigit():
                     num_players = int(event.unicode)
@@ -131,8 +131,7 @@ async def main():
     for player in players:
         player.draw(screen)
     pygame.display.flip()
-    await asyncio.sleep(0)
-
+    
     # Main loop
     running = True
     while running:
@@ -149,15 +148,14 @@ async def main():
 
         pygame.display.flip()
         
-        running = game.next_turn()  # Move to the next turn and check for game end
+        running = game.next_turn()
+        await asyncio.sleep(0)  # Move to the next turn and check for game end
 
     
     pygame.quit()
     return
 
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+asyncio.run(main())
 
 
 

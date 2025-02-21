@@ -8,16 +8,16 @@ class Map:
         self.width = len(layout[0]) * TILE_SIZE
         self.height = len(layout) * TILE_SIZE
 
-        self.floor_image = pygame.image.load("minigames/ghostbuster/assets/map/floor.png").convert_alpha()
+        self.floor_image = pygame.image.load("src/minigames/ghostbuster/assets/map/floor.png").convert_alpha()
         self.wall_images = {
-            "left": pygame.image.load("minigames/ghostbuster/assets/map/wall_left.png").convert_alpha(),
-            "right": pygame.image.load("minigames/ghostbuster/assets/map/wall_right.png").convert_alpha(),
-            "top": pygame.image.load("minigames/ghostbuster/assets/map/wall_top.png").convert_alpha(),
-            "bottom": pygame.image.load("minigames/ghostbuster/assets/map/wall_bottom.png").convert_alpha(),
-            "top_left": pygame.image.load("minigames/ghostbuster/assets/map/corner_top_left.png").convert_alpha(),
-            "top_right": pygame.image.load("minigames/ghostbuster/assets/map/corner_top_right.png").convert_alpha(),
-            "bottom_left": pygame.image.load("minigames/ghostbuster/assets/map/corner_bottom_left.png").convert_alpha(),
-            "bottom_right": pygame.image.load("minigames/ghostbuster/assets/map/corner_bottom_right.png").convert_alpha(),
+            "left": pygame.image.load("src/minigames/ghostbuster/assets/map/wall_left.png").convert_alpha(),
+            "right": pygame.image.load("src/minigames/ghostbuster/assets/map/wall_right.png").convert_alpha(),
+            "top": pygame.image.load("src/minigames/ghostbuster/assets/map/wall_top.png").convert_alpha(),
+            "bottom": pygame.image.load("src/minigames/ghostbuster/assets/map/wall_bottom.png").convert_alpha(),
+            "top_left": pygame.image.load("src/minigames/ghostbuster/assets/map/corner_top_left.png").convert_alpha(),
+            "top_right": pygame.image.load("src/minigames/ghostbuster/assets/map/corner_top_right.png").convert_alpha(),
+            "bottom_left": pygame.image.load("src/minigames/ghostbuster/assets/map/corner_bottom_left.png").convert_alpha(),
+            "bottom_right": pygame.image.load("src/minigames/ghostbuster/assets/map/corner_bottom_right.png").convert_alpha(),
         }
 
     def render(self, screen, camera):

@@ -1,7 +1,7 @@
 import pygame
 import random
-from settings import BOARD_SIZE, TILE_SIZE, BLUE, PLAYER_COLORS, MOVEMENT_PATH, SCREEN_HEIGHT, SCREEN_WIDTH, PROPERTY_BORDER, BLACK
-from property import Property
+from src.settings import BOARD_SIZE, TILE_SIZE, BLUE, PLAYER_COLORS, MOVEMENT_PATH, SCREEN_HEIGHT, SCREEN_WIDTH, PROPERTY_BORDER, BLACK
+from src.property import Property
 
 class Map:
     def __init__(self):
@@ -17,13 +17,13 @@ class Map:
         self.minigame_positions = set(random.sample(available_positions, 5))  # Randomly select 5 positions for minigames
 
         # Load minigame marker image
-        self.minigame_marker = pygame.transform.scale(pygame.image.load("assets/ghost.png"), (TILE_SIZE, TILE_SIZE))
+        self.minigame_marker = pygame.transform.scale(pygame.image.load("src/assets/ghost.png"), (TILE_SIZE, TILE_SIZE))
 
         # Scale houses
         self.house_images = {
-            1: pygame.transform.scale(pygame.image.load("assets/level1_2.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
-            2: pygame.transform.scale(pygame.image.load("assets/level2.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
-            3: pygame.transform.scale(pygame.image.load("assets/level3.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
+            1: pygame.transform.scale(pygame.image.load("src/assets/level1_2.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
+            2: pygame.transform.scale(pygame.image.load("src/assets/level2.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
+            3: pygame.transform.scale(pygame.image.load("src/assets/level3.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
         }
 
     def draw(self, screen):
