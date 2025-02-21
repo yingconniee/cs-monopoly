@@ -3,7 +3,7 @@ from settings import TILE_SIZE, MOVEMENT_PATH
 from minigames.ghostbuster.main import main as ghostbuster_main
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 
-background_image = pygame.image.load("assets/background.tiff")
+background_image = pygame.image.load("assets/background.png")
 background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 class Player:

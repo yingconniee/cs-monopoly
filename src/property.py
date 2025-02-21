@@ -29,6 +29,7 @@ class Property:
     def interact(self, player, screen, game_map, game):
         """Handles interaction when a player lands on a property"""
         pos = tuple(player.pos)
+        owner = game.get_player_by_name(self.owner)
 
         if pos in game_map.property_positions:
             property_name = game_map.property_names.get(pos, "Unknown")  # Get property name
@@ -43,7 +44,6 @@ class Property:
                         self.buy(player)  # Default behavior for generic bots
 
             elif self.owner != player.name:  # If player steps on someone else's property, pay rent
-                owner = game.get_player_by_name(self.owner)
         
                 if player.name in game.cooperation_map[owner.name] and owner.name in game.cooperation_map[player.name]: # Check if cooperation already exists
                     cheat = self.cheat_popup(screen, player, owner, game) # ask owner if they want to cheat
@@ -238,7 +238,7 @@ class Property:
             pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
 
             # Render message
-            message = f"You are cooperating with {owner.name}. Do you want to cheat and charge rent?"
+            message = f"You are cooperating with {player.name}. Do you want to cheat and charge rent?"
             cheat_text = font.render("Press Y to Cheat (Charge Rent)", True, (255, 0, 0))  # Red text for cheating
             respect_text = font.render("Press N to Respect Cooperation", True, (0, 0, 0))
 
@@ -265,13 +265,35 @@ class Property:
                             cheat = False
                             waiting = False
 
-            screen.blit(game.background_image, (0, 0))  
-            game.map.draw(screen)
-            for p in game.players:
-                p.draw(screen)
-            game.display_money()
-            pygame.display.flip()
         elif not owner.is_human and player.is_human: # human step on bot's property
             cheat = owner.cheat(game, player) # bot cheating logic
+
+            font = pygame.font.Font(None, 28)
+            popup_width, popup_height = 520, 140
+            popup_surface = pygame.Surface((popup_width, popup_height))
+            popup_surface.fill((255, 255, 255))
+            pygame.draw.rect(popup_surface, (0, 0, 0), popup_surface.get_rect(), 3)
+
+            if cheat:
+                decision_text = f"{owner.name} has CHEATED on {player.name}! Rent will be charged."
+                text_color = (255, 0, 0)  # Red for cheating
+            else:
+                decision_text = f"{owner.name} has COOPERATED with {player.name}. No rent charged."
+                text_color = (0, 128, 0)  # Green for cooperation
+
+            decision_surface = font.render(decision_text, True, text_color)
+
+            popup_surface.blit(decision_surface, (20, 60))
+            screen.blit(popup_surface, (SCREEN_WIDTH // 2 - popup_width // 2, SCREEN_HEIGHT // 2 - popup_height // 2))
+            pygame.display.flip()
+
+            pygame.time.wait(2000)
+        
+        screen.blit(game.background_image, (0, 0))  
+        game.map.draw(screen)
+        for p in game.players:
+            p.draw(screen)
+        game.display_money()
+        pygame.display.flip()
 
         return cheat

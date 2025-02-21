@@ -12,7 +12,7 @@ class Bot(Player):
         print(f"{self.name} rolled {roll}")
         self.move(roll, screen, game)
         if tuple(self.pos) in game.map.minigame_positions:
-            self.play_minigame(screen)
+            self.play_minigame(screen, game)
     
     def play_minigame(self, screen, game):
         money = random.choice([500, -500])
@@ -45,14 +45,18 @@ class Grudger(Bot):
         self.player_1_cheated = False
 
     def interact_with_property(self, property, screen, game):
-        player1 = game.get_player_by_name("Player1") # to be fixed here, currently only player 1
+        # player1 = game.get_player_by_name("Player1") # to be fixed here, currently only player 1
 
+        # if property.owner is None:
+        #     if self.waiting_for_player1 and player1 and any(p.owner == "Player1" for p in game.map.properties.values()):
+        #         self.waiting_for_player1 = False  # Stop waiting once Player1 has bought at least one property
+        #         property.buy(self)  # Now buy property
+        # elif property.owner == self.name:
+        #     property.upgrade(self, screen, game)  # Upgrade if owned
         if property.owner is None:
-            if self.waiting_for_player1 and player1 and any(p.owner == "Player1" for p in game.map.properties.values()):
-                self.waiting_for_player1 = False  # Stop waiting once Player1 has bought at least one property
-                property.buy(self)  # Now buy property
+            property.buy(self)  # Buy instantly
         elif property.owner == self.name:
-            property.upgrade(self, screen, game)  # Upgrade if owned
+            property.upgrade(self, screen, game)
     
     def cheat(self, game, player):
         if self.name in game.cheat_map[player.name]:
@@ -72,25 +76,29 @@ class Detective(Bot):
         self.curr_cheat_index = 0
 
     def interact_with_property(self, property, screen, game):
-        if property.position not in self.visit_count:
-            self.visit_count[property.position] = 0
+        # if property.position not in self.visit_count:
+        #     self.visit_count[property.position] = 0
 
-        self.visit_count[property.position] += 1
-        visit_num = self.visit_count[property.position]
-        player1 = game.get_player_by_name("Player1")
+        # self.visit_count[property.position] += 1
+        # visit_num = self.visit_count[property.position]
+        # player1 = game.get_player_by_name("Player1")
 
+        # if property.owner is None:
+        #     if visit_num == 2:
+        #         property.buy(self)  # Buy on second visit
+        #     elif visit_num > 4:
+        #         if player1 and any(p.owner == "Player1" for p in game.map.properties.values()):
+        #             self.mirroring_player1 = True  # Start mirroring Player1
+
+        #     if self.mirroring_player1 and player1:
+        #         if any(p.owner == "Player1" for p in game.map.properties.values()):
+        #             property.buy(self)  # Mirror Player1's buying action
+        # elif property.owner == self.name:
+        #     property.upgrade(self, screen, game)  # Upgrade if owned
         if property.owner is None:
-            if visit_num == 2:
-                property.buy(self)  # Buy on second visit
-            elif visit_num > 4:
-                if player1 and any(p.owner == "Player1" for p in game.map.properties.values()):
-                    self.mirroring_player1 = True  # Start mirroring Player1
-
-            if self.mirroring_player1 and player1:
-                if any(p.owner == "Player1" for p in game.map.properties.values()):
-                    property.buy(self)  # Mirror Player1's buying action
+            property.buy(self)  # Buy instantly
         elif property.owner == self.name:
-            property.upgrade(self, screen, game)  # Upgrade if owned
+            property.upgrade(self, screen, game)
     
     def cheat(self, game, player): # to be fixed here, currently only player 1
         if self.name in game.cheat_map[player.name]:
