@@ -4,3 +4,7 @@ src/minigames/ghostbuster/__pycache__
 venv/
 build
 main.spec
+.DS_Store
+setup.py
+dist
+
