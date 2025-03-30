@@ -6,5 +6,5 @@ build
 main.spec
 .DS_Store
 setup.py
-dist
+dist/
 
