@@ -1,12 +1,12 @@
 import pygame
-from src.game import Game
-from src.player import Player
-from src.bot import Bot
-from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
-from src.bot import Grudger, Detective, Cheater
 import random
 import asyncio
 import sys
+
+from src.game import Game
+from src.player import Player
+from src.bot import Grudger, Detective, Cheater
+from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 # Initialize screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -25,7 +25,6 @@ starting_pos = [10, 10]
 player_offsets = [(5, 5), (35, 5), (5, 35), (35, 35)]
 
 def start_screen(screen, game):
-    """Display the start screen and get game mode and number of players"""
     pygame.font.init()
     font = pygame.font.Font(None, 36)
     title_font = pygame.font.Font(None, 72)
@@ -57,8 +56,39 @@ def start_screen(screen, game):
 
     return game_mode
 
+def choose_singleplayer_ai_mode(screen):
+    pygame.font.init()
+    font = pygame.font.Font(None, 36)
+    title_font = pygame.font.Font(None, 64)
+
+    title_text = title_font.render("Choose Your AI Opponent", True, (0, 0, 0))
+    evo_ai_text = font.render("1. Trust of Evolution AI", True, (0, 0, 0))
+    qlearn_ai_text = font.render("2. Q-Learning AI", True, (0, 0, 0))
+
+    screen.blit(background_image, (0, 0))
+    screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 3))
+    screen.blit(evo_ai_text, (SCREEN_WIDTH // 2 - evo_ai_text.get_width() // 2, SCREEN_HEIGHT // 2))
+    screen.blit(qlearn_ai_text, (SCREEN_WIDTH // 2 - qlearn_ai_text.get_width() // 2, SCREEN_HEIGHT // 2 + 50))
+    pygame.display.flip()
+
+    waiting = True
+    ai_mode = None
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    ai_mode = "evo"
+                    waiting = False
+                elif event.key == pygame.K_2:
+                    ai_mode = "qlearning"
+                    waiting = False
+
+    return ai_mode
+
 def get_number_of_players(screen):
-    """Ask the user for the number of players in multiplayer mode"""
     pygame.font.init()
     font = pygame.font.Font(None, 36)
     prompt_text = font.render("Enter number of players (2-4):", True, (0, 0, 0))
@@ -82,47 +112,46 @@ def get_number_of_players(screen):
 
     return num_players
 
-# Initialize game with an empty list of players to draw the map
+# ================== MAIN GAME LOOP ====================
+
 async def main():
     game = Game(screen, [], background_image)
     game_mode = start_screen(screen, game)
+    players = []
 
-    # Determine number of players and bots
     if game_mode == "single":
-        num_players = 1
-        num_bots = 3
-    else:
+        ai_mode = choose_singleplayer_ai_mode(screen)
+        players.append(Player("Player1", player_images["Player1"], starting_pos, player_offsets[0]))
+
+        if ai_mode == "evo":
+            players.append(Grudger("Grudger", player_images["Player2"], starting_pos, player_offsets[1]))
+            players.append(Cheater("Cheater", player_images["Player3"], starting_pos, player_offsets[2]))
+            players.append(Detective("Detective", player_images["Player4"], starting_pos, player_offsets[3]))
+        elif ai_mode == "qlearning":
+            from src.bot import QLearnerBot  # Make sure QLearnerBot is implemented
+            players.append(QLearnerBot("QLearner", player_images["Player2"], starting_pos, player_offsets[1]))
+            players.append(Cheater("Cheater", player_images["Player3"], starting_pos, player_offsets[2]))
+            players.append(Grudger("Grudger", player_images["Player4"], starting_pos, player_offsets[3]))
+
+    elif game_mode == "multi":
         num_players = get_number_of_players(screen)
         num_bots = 4 - num_players
 
-    players = []
-    used_images = dict()
+        used_images = dict()
+        for i in range(num_players):
+            player_name = f"Player{i+1}"
+            player_image = player_images[player_name]
+            used_images[player_name] = player_image
+            players.append(Player(player_name, player_image, starting_pos, player_offsets[i]))
 
-    for i in range(num_players):
-        player_name = f"Player{i+1}"
-        player_image = player_images[player_name]
-        used_images[player_name] = player_image  # Mark as used
-        players.append(Player(player_name, player_image, starting_pos, player_offsets[i]))
+        available_images = [img for name, img in player_images.items() if name not in used_images]
+        selected_bot_types = random.sample([Grudger, Detective, Cheater], num_bots)
 
-    #for i in range(num_bots):
-    # players.append(Bot(f"Bot{i+1}", player_images[f"Player{num_players + i + 1}"], starting_pos, player_offsets[num_players + i]))
-    # Add specialized bots based on available slots
+        for i, bot_class in enumerate(selected_bot_types):
+            bot = bot_class(bot_class.__name__, available_images[i], starting_pos, player_offsets[i + num_players])
+            players.append(bot)
 
-    # Filter available images that were not used by human players
-    available_images = [img for name, img in player_images.items() if name not in used_images]
-
-    # Randomly select `num_bots` unique bot types
-    selected_bot_types = random.sample([Grudger, Detective, Cheater], num_bots)
-
-    # Assign a unique image to each selected bot
-    selected_bots = []
-    for i, bot_class in enumerate(selected_bot_types):
-        bot = bot_class(bot_class.__name__, available_images[i], starting_pos, player_offsets[i + num_players])
-        selected_bots.append(bot)
-
-    # Add the required number of bots
-    players.extend(selected_bots)  # Ensures the correct number of bots are added
-
+    # Game Setup
     game = Game(screen, players, background_image)
     pygame.font.init()
 
@@ -131,32 +160,24 @@ async def main():
     for player in players:
         player.draw(screen)
     pygame.display.flip()
-    
-    # Main loop
+
+    # Main Game Loop
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False  
+                running = False
 
-        screen.blit(background_image, (0, 0))  # Redraw background
-        game.map.draw(screen)  # Redraw board
+        screen.blit(background_image, (0, 0))
+        game.map.draw(screen)
         for player in players:
-            player.draw(screen)  # Draw all players
-
-        game.display_money()  # Show player money
-
+            player.draw(screen)
+        game.display_money()
         pygame.display.flip()
-        
-        running = game.next_turn()
-        await asyncio.sleep(0)  # Move to the next turn and check for game end
 
-    
+        running = game.next_turn()
+        await asyncio.sleep(0)
+
     pygame.quit()
-    return
 
 asyncio.run(main())
-
-
-
-
