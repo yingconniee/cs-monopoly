@@ -24,12 +24,13 @@ MOVEMENT_PATH = (
 
 # Players
 
-PLAYER_COLORS = { 
-    "Player1": (255, 0, 0),    # Red
-    "Player2": (0, 255, 0),    # Green
-    "Player3": (0, 0, 255),    # Blue
-    "Player4": (255, 255, 0),  # Yellow
-    "Grudger": (255, 165, 0),     # Orange
-    "Detective": (128, 0, 128),     # Purple
-    "Cheater": (0, 255, 255),     # Cyan
+PLAYER_COLORS = {
+    "Player1": (255, 0, 0),      # Red
+    "Player2": (0, 255, 0),      # Green
+    "Player3": (0, 0, 255),      # Blue
+    "Player4": (255, 255, 0),    # Yellow
+    "Grudger": (255, 165, 0),    # Orange
+    "Detective": (128, 0, 128),  # Purple
+    "Cheater": (0, 255, 255),    # Cyan
+    "QLearner": (0, 128, 255),   # NEW: Q-Learner bot color
 }

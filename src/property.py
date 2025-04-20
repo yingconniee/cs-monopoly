@@ -17,6 +17,7 @@ class Property:
             self.level = 1  # Start with Level 1 house
             self.just_bought = True  # Set the just_bought flag0
             print('Property bought!')
+            
 
     def upgrade(self, player, screen, game):
         """Ask the player if they want to upgrade (max level 3)"""

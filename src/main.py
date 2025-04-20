@@ -178,6 +178,11 @@ async def main():
         running = game.next_turn()
         await asyncio.sleep(0)
 
+        for player in players:
+            if isinstance(player, QLearnerBot):
+                player.save_q_table()
+
+
     pygame.quit()
 
 asyncio.run(main())

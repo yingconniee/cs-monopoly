@@ -1,5 +1,75 @@
-from src.player import Player
 import random
+import os
+import pickle
+from collections import defaultdict
+from src.player import Player
+
+class QLearnerBot(Player):
+    def __init__(self, name, image, pos, offset, alpha=0.1, gamma=0.9, epsilon=0.1):
+        super().__init__(name, image, pos, offset, is_human=False)
+        self.alpha = alpha
+        self.gamma = gamma
+        self.epsilon = epsilon
+        self.q_table = defaultdict(lambda: defaultdict(float))
+        self.q_path = f"q_table_{name}.pkl"
+        self.prev_state = None
+        self.prev_action = None
+        self.load_q_table()
+
+    def state_representation(self, game, property):
+        # You can make this more complex over time
+        return (
+            tuple(self.pos),             # current position
+            property.position if property else None,
+            int(self.money // 1000)      # money bucketed in $1000s
+        )
+
+    def choose_action(self, state, actions):
+        if random.random() < self.epsilon:
+            return random.choice(actions)
+        return max(actions, key=lambda a: self.q_table[state][a])
+
+    def update_q_table(self, reward, new_state):
+        old_q = self.q_table[self.prev_state][self.prev_action]
+        future_max = max(self.q_table[new_state].values(), default=0)
+        self.q_table[self.prev_state][self.prev_action] = old_q + self.alpha * (reward + self.gamma * future_max - old_q)
+
+    def take_turn(self, screen, game):
+        roll = game.dice.roll(screen)
+        print(f"{self.name} rolled {roll}")
+        self.move(roll, screen, game)
+
+        if tuple(self.pos) in game.map.minigame_positions:
+            self.play_minigame(screen, game)
+
+    def interact_with_property(self, property, screen, game):
+        state = self.state_representation(game, property)
+        actions = ["buy", "skip"]
+        action = self.choose_action(state, actions)
+
+        self.prev_state = state
+        self.prev_action = action
+
+        if action == "buy" and property.owner is None:
+            property.buy(self)
+        elif property.owner == self.name:
+            property.upgrade(self, screen, game)
+
+        reward = self.money / 10000  # normalize reward
+        new_state = self.state_representation(game, property)
+        self.update_q_table(reward, new_state)
+
+    def save_q_table(self):
+        with open(self.q_path, "wb") as f:
+            pickle.dump(dict(self.q_table), f)
+        print(f"[QLearner] Q-table saved. Entries: {sum(len(v) for v in self.q_table.values())}")
+
+    def load_q_table(self):
+        if os.path.exists(self.q_path):
+            with open(self.q_path, "rb") as f:
+                data = pickle.load(f)
+                self.q_table = defaultdict(lambda: defaultdict(float), data)
+
 
 class Bot(Player):
     def __init__(self, name, image, pos, offset):

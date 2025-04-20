@@ -48,7 +48,11 @@ class Map:
             x, y = pos[1] * TILE_SIZE, pos[0] * TILE_SIZE
 
             if property_obj.owner:
-                border_color = PLAYER_COLORS[property_obj.owner]
+                owner_name = property_obj.owner
+                border_color = PLAYER_COLORS.get(owner_name, (128, 128, 128))  # Fallback to gray if owner color not found
+                if owner_name not in PLAYER_COLORS:
+                    print(f"[Warning] Unknown player color for '{owner_name}'")
+                
                 pygame.draw.rect(screen, border_color, (x, y, TILE_SIZE, TILE_SIZE), 6)
 
                 if property_obj.level in self.house_images:
