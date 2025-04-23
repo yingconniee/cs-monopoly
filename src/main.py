@@ -7,6 +7,7 @@ from src.game import Game
 from src.player import Player
 from src.bot import Grudger, Detective, Cheater
 from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from src.bot import QLearnerBot
 
 # Initialize screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -128,7 +129,6 @@ async def main():
             players.append(Cheater("Cheater", player_images["Player3"], starting_pos, player_offsets[2]))
             players.append(Detective("Detective", player_images["Player4"], starting_pos, player_offsets[3]))
         elif ai_mode == "qlearning":
-            from src.bot import QLearnerBot  # Make sure QLearnerBot is implemented
             players.append(QLearnerBot("QLearner", player_images["Player2"], starting_pos, player_offsets[1]))
             players.append(Cheater("Cheater", player_images["Player3"], starting_pos, player_offsets[2]))
             players.append(Grudger("Grudger", player_images["Player4"], starting_pos, player_offsets[3]))

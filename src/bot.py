@@ -4,9 +4,35 @@ import pickle
 from collections import defaultdict
 from src.player import Player
 
-class QLearnerBot(Player):
-    def __init__(self, name, image, pos, offset, alpha=0.1, gamma=0.9, epsilon=0.1):
+class Bot(Player):
+    def __init__(self, name, image, pos, offset):
+        """Initialize bot (inherits from Player)"""
         super().__init__(name, image, pos, offset, is_human=False)
+
+    def take_turn(self, screen, game):
+        """Handles bot's turn automatically"""
+        roll = game.dice.roll(screen)
+        print(f"{self.name} rolled {roll}")
+        self.move(roll, screen, game)
+        # if tuple(self.pos) in game.map.minigame_positions:
+        #     self.play_minigame(screen, game)
+    
+    def play_minigame(self, screen, game):
+        money = random.choice([500, -500])
+        print(money)
+        self.money += money
+
+        if money == 500:
+            result_message = "You won the minigame! You earned $500."
+        else:
+            result_message = "You lost the minigame! You lost $500."
+
+        self.show_popup(screen, result_message)
+
+class QLearnerBot(Bot):  # ← now inherits from Bot
+    def __init__(self, name, image, pos, offset, alpha=0.1, gamma=0.9, epsilon=0.1):
+        super().__init__(name, image, pos, offset)
+        # Bot.__init__ already calls Player.__init__(…, is_human=False)
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
@@ -17,11 +43,10 @@ class QLearnerBot(Player):
         self.load_q_table()
 
     def state_representation(self, game, property):
-        # You can make this more complex over time
         return (
-            tuple(self.pos),             # current position
+            tuple(self.pos),
             property.position if property else None,
-            int(self.money // 1000)      # money bucketed in $1000s
+            int(self.money // 1000),
         )
 
     def choose_action(self, state, actions):
@@ -32,15 +57,9 @@ class QLearnerBot(Player):
     def update_q_table(self, reward, new_state):
         old_q = self.q_table[self.prev_state][self.prev_action]
         future_max = max(self.q_table[new_state].values(), default=0)
-        self.q_table[self.prev_state][self.prev_action] = old_q + self.alpha * (reward + self.gamma * future_max - old_q)
-
-    def take_turn(self, screen, game):
-        roll = game.dice.roll(screen)
-        print(f"{self.name} rolled {roll}")
-        self.move(roll, screen, game)
-
-        if tuple(self.pos) in game.map.minigame_positions:
-            self.play_minigame(screen, game)
+        self.q_table[self.prev_state][self.prev_action] = (
+            old_q + self.alpha * (reward + self.gamma * future_max - old_q)
+        )
 
     def interact_with_property(self, property, screen, game):
         state = self.state_representation(game, property)
@@ -69,32 +88,9 @@ class QLearnerBot(Player):
             with open(self.q_path, "rb") as f:
                 data = pickle.load(f)
                 self.q_table = defaultdict(lambda: defaultdict(float), data)
-
-
-class Bot(Player):
-    def __init__(self, name, image, pos, offset):
-        """Initialize bot (inherits from Player)"""
-        super().__init__(name, image, pos, offset, is_human=False)
-
-    def take_turn(self, screen, game):
-        """Handles bot's turn automatically"""
-        roll = game.dice.roll(screen)
-        print(f"{self.name} rolled {roll}")
-        self.move(roll, screen, game)
-        if tuple(self.pos) in game.map.minigame_positions:
-            self.play_minigame(screen, game)
     
-    def play_minigame(self, screen, game):
-        money = random.choice([500, -500])
-        print(money)
-        self.money += money
-
-        if money == 500:
-            result_message = "You won the minigame! You earned $500."
-        else:
-            result_message = "You lost the minigame! You lost $500."
-
-        self.show_popup(screen, result_message)
+    def cheat(self, game, player):
+        return True
 
 class Cheater(Bot):
     """Bot2 always buys and upgrades properties"""
@@ -104,7 +100,7 @@ class Cheater(Bot):
         elif property.owner == self.name:
             property.upgrade(self, screen, game)  # Upgrade if owned
     
-    def cheat(self, game, player): # to be fixed here, currently only player 1
+    def cheat(self, game, player):
         return True
 
 class Grudger(Bot):
