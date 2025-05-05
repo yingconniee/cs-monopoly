@@ -8,18 +8,12 @@ class Map:
         """Initialize map with randomly assigned property positions"""
         self.property_positions = set(random.sample(MOVEMENT_PATH, 20))
         self.properties = {pos: Property(pos) for pos in self.property_positions}
-
-        # Assign unique property names
         self.property_names = {pos: f"MCS{index:03d}" for index, pos in enumerate(self.property_positions, start=1)}
 
-        # Identify available positions for minigames
         available_positions = [pos for pos in MOVEMENT_PATH if pos not in self.property_positions]
-        self.minigame_positions = set(random.sample(available_positions, 5))  # Randomly select 5 positions for minigames
+        self.minigame_positions = set(random.sample(available_positions, 5)) 
 
-        # Load minigame marker image
         self.minigame_marker = pygame.transform.scale(pygame.image.load("src/assets/ghost.png"), (TILE_SIZE, TILE_SIZE))
-
-        # Scale houses
         self.house_images = {
             1: pygame.transform.scale(pygame.image.load("src/assets/level1_2.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  
             2: pygame.transform.scale(pygame.image.load("src/assets/level2.png"), (TILE_SIZE + 20, TILE_SIZE + 20)),  

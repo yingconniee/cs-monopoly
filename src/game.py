@@ -16,14 +16,8 @@ class Game:
         self.running = True
         self.cooperation_map = defaultdict(set)
         self.cheat_map = defaultdict(set)
-
-        # Initialize the game map
         self.map = Map()
-
-        # Initialize dice
         self.dice = Dice()
-
-        # Give each player $10,000 at the start
         for player in self.players:
             player.money = 10000
 
@@ -46,7 +40,6 @@ class Game:
      max_money = max(player.money for player in self.players)  # Find the highest money amount
      winners = [player for player in self.players if player.money == max_money]  # Get all players with that amount
      return winners
-
 
     def get_player_by_name(self, name):
         """Find player by name"""

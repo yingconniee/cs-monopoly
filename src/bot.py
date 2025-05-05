@@ -14,10 +14,9 @@ class Bot(Player):
         roll = game.dice.roll(screen)
         print(f"{self.name} rolled {roll}")
         self.move(roll, screen, game)
-        # if tuple(self.pos) in game.map.minigame_positions:
-        #     self.play_minigame(screen, game)
     
     def play_minigame(self, screen, game):
+        """Handles bot's minigame play logic"""
         money = random.choice([500, -500])
         print(money)
         self.money += money
@@ -29,10 +28,9 @@ class Bot(Player):
 
         self.show_popup(screen, result_message)
 
-class QLearnerBot(Bot):  # ← now inherits from Bot
+class QLearnerBot(Bot):
     def __init__(self, name, image, pos, offset, alpha=0.1, gamma=0.9, epsilon=0.1):
         super().__init__(name, image, pos, offset)
-        # Bot.__init__ already calls Player.__init__(…, is_human=False)
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
@@ -74,7 +72,7 @@ class QLearnerBot(Bot):  # ← now inherits from Bot
         elif property.owner == self.name:
             property.upgrade(self, screen, game)
 
-        reward = self.money / 10000  # normalize reward
+        reward = self.money / 10000 
         new_state = self.state_representation(game, property)
         self.update_q_table(reward, new_state)
 
@@ -90,15 +88,28 @@ class QLearnerBot(Bot):  # ← now inherits from Bot
                 self.q_table = defaultdict(lambda: defaultdict(float), data)
     
     def cheat(self, game, player):
-        return True
+        # state = (
+        #     tuple(self.pos),
+        #     tuple(other_player.pos),
+        #     int(self.money // 1000),
+        #     int(other_player.money // 1000),
+        # )
 
+        # actions = ["cheat", "cooperate"]
+        # action = self.choose_action(state, actions)
+
+        # self.prev_state = state
+        # self.prev_action = action
+
+        # return action == "cheat"
+        return True
+    
 class Cheater(Bot):
-    """Bot2 always buys and upgrades properties"""
     def interact_with_property(self, property, screen, game):
         if property.owner is None:
-            property.buy(self)  # Buy instantly
+            property.buy(self) 
         elif property.owner == self.name:
-            property.upgrade(self, screen, game)  # Upgrade if owned
+            property.upgrade(self, screen, game)
     
     def cheat(self, game, player):
         return True

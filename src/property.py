@@ -6,9 +6,9 @@ class Property:
     def __init__(self, position):
         """Initialize property"""
         self.position = position
-        self.owner = None  # No owner at start
-        self.level = 0  # No house at start
-        self.just_bought = False  # Flag to track if the property was just bought
+        self.owner = None 
+        self.level = 0 
+        self.just_bought = False  
 
     def buy(self, player):
         """Allows a player to buy the property if it's unowned"""
@@ -18,7 +18,6 @@ class Property:
             self.just_bought = True  # Set the just_bought flag0
             print('Property bought!')
             
-
     def upgrade(self, player, screen, game):
         """Ask the player if they want to upgrade (max level 3)"""
         if self.owner == player.name and self.level < 3:

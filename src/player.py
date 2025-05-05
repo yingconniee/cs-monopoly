@@ -33,7 +33,6 @@ class Player:
                             print(f"{self.name} rolled {roll}")
                             self.move(roll, screen, game)
                             waiting = False  # End turn after moving
-
     
     def draw(self, screen):
         """Draws the player on the screen at the correct position"""
