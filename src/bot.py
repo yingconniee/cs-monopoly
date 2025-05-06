@@ -103,6 +103,7 @@ class QLearnerBot(Bot):
 
         # return action == "cheat"
         return True
+        
     
 class Cheater(Bot):
     def interact_with_property(self, property, screen, game):
